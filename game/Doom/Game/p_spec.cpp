@@ -1240,6 +1240,14 @@ void P_PlayerInSpecialSector(player_t& player) noexcept {
 
         // Secret sector
         case 9: {
+    #if PSYDOOM_MODS
+            // Some maps, like E1M2 (MAP02), stack secret sectors right next to each other. Check that a message isn't already displayed to \
+            // avoid playing the secret notification sound twice.
+            if (gStatusBar.alertMessageTicsLeft == 0) {
+                ST_AlertMessage("A secret is revealed!", 2.5 * TICRATE); // 2.5 seconds
+                S_StartSound(NULL, sfx_itmbk);
+            }
+    #endif
             player.secretcount += 1;
             sector.special = 0;         // Consume the special so it's only counted once!
         }   break;
